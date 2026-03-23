@@ -28,6 +28,18 @@ builder.Services.AddScoped<IReviewerRepository, ReviewerRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Allow Flutter web (Chrome) — any localhost port
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFlutter", policy =>
+    {
+        policy.SetIsOriginAllowed(origin =>
+                new Uri(origin).Host == "localhost")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -56,7 +68,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowFlutter");
 
 app.UseAuthorization();
 

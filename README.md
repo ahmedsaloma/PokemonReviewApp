@@ -1,97 +1,93 @@
-# Pokemon Review API
+# Pokemon Review App
 
-A RESTful Web API built with ASP.NET Core and Entity Framework Core that manages Pokémon, their categories, owners, reviews, and reviewers.
-
-## 📖 Project Description
-
-The Pokémon Review API provides endpoints for managing Pokémon information and user reviews.
-It follows clean architecture principles using the Repository Pattern, DTOs, AutoMapper, and Dependency Injection to deliver a scalable and maintainable solution.
-
-This project demonstrates best practices in ASP.NET Core Web API development.
-
----
+A full-stack project consisting of an ASP.NET Core Web API for the backend and a Flutter application for the frontend.
 
 ## 🏗️ Project Structure
 
-- **Controllers/** – Handle incoming API requests and send appropriate responses.
-- **Data/** – Contains the `DataContext.cs` for Entity Framework Core.
-- **DTOs/** – Defines Data Transfer Objects for decoupling models and entities.
-- **Interfaces/** – Interface contracts for repositories.
-- **Models/** – Database entity models.
-- **Repositories/** – Concrete implementations of repository interfaces.
-- **Mappings/** – AutoMapper profiles for model mapping.
+The repository is organized into two main parts: the backend API and the frontend UI.
 
----
+### 1. Backend (`PokemonReviewApp/`)
+A RESTful Web API built with ASP.NET Core and Entity Framework Core that manages Pokémon, their categories, owners, reviews, and reviewers. It follows clean architecture principles using the Repository Pattern, DTOs, AutoMapper, and Dependency Injection.
 
-## 🛠️ Technologies Used
+**Key Directories:**
+- `Controllers/` – Handle incoming API requests and send appropriate responses.
+- `Data/` – Contains the `DataContext.cs` for Entity Framework Core.
+- `Dto/` – Defines Data Transfer Objects for decoupling models and entities.
+- `Interface/` – Interface contracts for repositories.
+- `Models/` – Database entity models.
+- `Repository/` – Concrete implementations of repository interfaces.
+- `Helper/` – AutoMapper profiles and other utilities.
 
-- ASP.NET Core (.NET 6)
+**Technologies Used:**
+- ASP.NET Core
 - Entity Framework Core
 - AutoMapper
 - Swagger (Swashbuckle)
-- SQL Server / LocalDB
+- SQL Server
+
+### 2. Frontend (`pokemon_review_app_ui/`)
+A cross-platform mobile application built with Flutter, designed to consume the ASP.NET Core API. It uses a feature-first clean architecture to manage state, routing, and UI components.
+
+**Key Directories:**
+- `lib/core/` – Core functionalities used across the app, such as constants, API configurations, routing logic, and themes.
+- `lib/features/` – The core domains of the application, broken down by feature:
+  - `pokemon/` – Browsing and viewing details about Pokémon.
+  - `categories/` – Different types and categories of Pokémon.
+  - `countries/` – Regions related to Pokémon owners.
+  - `owners/` – Information about trainers and gym leaders.
+  - `reviewers/` – Registered users who provide reviews.
+  - `reviews/` – The reviews written about Pokémon.
+- `lib/shared/` – Reusable UI widgets and custom components shared across multiple features.
+
+**Technologies Used:**
+- Flutter & Dart
+- HTTP integrations for API calls
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these steps to run the project locally:
+Follow these steps to run the project locally.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/ahmedsaloma/PokemonReviewApp.git
-   ```
+### Backend Setup
 
-2. **Navigate to the project directory**:
+1. **Navigate to the API directory**:
    ```bash
    cd PokemonReviewApp
    ```
-
-3. **Set up the database**:
-   Update your `appsettings.json` connection string:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PokemonReviewDb;Trusted_Connection=True;"
-   }
-   ```
-
-4. **Apply migrations** (if necessary):
+2. **Set up the database connection**:
+   Update `appsettings.json` with your SQL Server connection string.
+3. **Apply migrations** (if necessary, or it will auto-seed based on your `Program.cs`):
    ```bash
    dotnet ef database update
    ```
-
-5. **Run the application**:
+4. **Run the API**:
    ```bash
    dotnet run
    ```
+   The Swagger UI will be accessible to interact with the API endpoints.
 
-6. **Access the API documentation**:
-   Open your browser at:
+### Frontend Setup
+
+1. **Navigate to the Flutter directory**:
+   ```bash
+   cd pokemon_review_app_ui
    ```
-   https://localhost:{port}/swagger/index.html
+2. **Install dependencies**:
+   ```bash
+   flutter pub get
    ```
-
----
-
-## 📚 Features
-
-- Pokémon Management (Create, Read, Update, Delete)
-- Category Assignment
-- Owner and Gym Tracking
-- Review and Reviewer Management
-- AutoMapper Integration
-- API Documentation via Swagger
+3. **Configure the base URL**:
+   Ensure `lib/core/constants/api_constants.dart` points to your local running backend API (e.g., `http://10.0.2.2:5000` for Android emulator or `http://localhost:5000` for iOS/Web).
+4. **Run the Flutter app**:
+   ```bash
+   flutter run
+   ```
 
 ---
 
 ## 👤 Author
-
 - **Ahmed Saloma** – [GitHub](https://github.com/ahmedsaloma)
 
----
-
 ## 📄 License
-
 This project is licensed under the MIT License.
-You are free to use, modify, and share it.
-

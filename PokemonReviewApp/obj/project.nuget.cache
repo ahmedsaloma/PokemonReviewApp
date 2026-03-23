@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "fDnVX5SQImk=",
+  "dgSpecHash": "z6W517K8RMI=",
   "success": true,
   "projectFilePath": "D:\\PokemonReviewApp\\PokemonReviewApp\\PokemonReviewApp.csproj",
   "expectedPackageFiles": [
@@ -91,5 +91,18 @@
     "C:\\Users\\DELL\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'AutoMapper' 14.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-rvv3-g6hj-g44x",
+      "projectPath": "D:\\PokemonReviewApp\\PokemonReviewApp\\PokemonReviewApp.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\PokemonReviewApp\\PokemonReviewApp\\PokemonReviewApp.csproj",
+      "libraryId": "AutoMapper",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

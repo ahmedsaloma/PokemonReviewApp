@@ -1,0 +1,124 @@
+# ============================================================
+# .NET / ASP.NET Core
+# ============================================================
+
+## Build outputs
+bin/
+obj/
+out/
+
+## Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+!**/packages/build/
+
+## Publish profiles & web deploy
+**/Properties/PublishProfiles/
+PublishScripts/
+*.pubxml
+*.pubxml.user
+
+## Secrets & config overrides
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.pfx
+*.p12
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## Test results
+TestResults/
+coverage/
+*.trx
+*.coveragexml
+
+# ============================================================
+# Flutter / Dart
+# ============================================================
+
+## Dart tool cache
+.dart_tool/
+.packages
+pubspec.lock
+
+## Build & generated files
+build/
+*.g.dart
+*.freezed.dart
+
+## Flutter specific
+.flutter-plugins
+.flutter-plugins-dependencies
+.fvm/
+
+## iOS / macOS
+ios/Pods/
+ios/.symlinks/
+macos/Pods/
+macos/.symlinks/
+*.xcworkspace/
+DerivedData/
+
+## Android
+android/.gradle/
+android/local.properties
+android/captures/
+android/key.properties
+*.keystore
+*.jks
+
+## Web
+web/
+lib/generated_plugin_registrant.dart
+
+## Coverage
+coverage/
+lcov.info
+
+# ============================================================
+# OS & Editor
+# ============================================================
+
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+
+## JetBrains
+.idea/
+*.iml
+
+## Logs
+*.log
+logs/
+
+## Environment files
+.env
+.env.*
+!.env.example
