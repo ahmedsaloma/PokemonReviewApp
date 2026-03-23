@@ -14,7 +14,7 @@ class CategoryService {
   }
 
   static Future<List<Pokemon>> fetchPokemonByCategory(int categoryId) async {
-    final res = await http.get(Uri.parse('${ApiConstants.baseUrl}Category/$categoryId/pokemon'));
+    final res = await http.get(Uri.parse('${ApiConstants.baseUrl}Category/Pokemon/$categoryId'));
     if (res.statusCode == 200) {
       return (jsonDecode(res.body) as List).map((e) => Pokemon.fromJson(e)).toList();
     }

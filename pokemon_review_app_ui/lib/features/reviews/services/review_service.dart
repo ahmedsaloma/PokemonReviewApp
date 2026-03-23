@@ -5,19 +5,26 @@ import '../models/review.dart';
 
 class ReviewService {
   static Future<List<Review>> fetchByPokemon(int pokemonId) async {
-    final res = await http.get(Uri.parse('${ApiConstants.baseUrl}Pokemon/$pokemonId/reviews'));
+    // Correct route: GET api/Review/pokemon/{pokeId}
+    final res = await http.get(
+        Uri.parse('${ApiConstants.baseUrl}Review/pokemon/$pokemonId'));
     if (res.statusCode == 200) {
-      return (jsonDecode(res.body) as List).map((e) => Review.fromJson(e)).toList();
+      return (jsonDecode(res.body) as List)
+          .map((e) => Review.fromJson(e))
+          .toList();
     }
-    throw Exception('Failed to load reviews');
+    throw Exception('Failed to load reviews (status ${res.statusCode})');
   }
 
   static Future<List<Review>> fetchByReviewer(int reviewerId) async {
-    final res = await http.get(Uri.parse('${ApiConstants.baseUrl}Reviewer/$reviewerId/reviews'));
+    final res = await http.get(
+        Uri.parse('${ApiConstants.baseUrl}Reviewer/$reviewerId/reviews'));
     if (res.statusCode == 200) {
-      return (jsonDecode(res.body) as List).map((e) => Review.fromJson(e)).toList();
+      return (jsonDecode(res.body) as List)
+          .map((e) => Review.fromJson(e))
+          .toList();
     }
-    throw Exception('Failed to load reviewer reviews');
+    throw Exception('Failed to load reviewer reviews (status ${res.statusCode})');
   }
 
   static Future<void> create({
@@ -27,27 +34,28 @@ class ReviewService {
     required int reviewerId,
     required int pokemonId,
   }) async {
+    // reviewerId & pokeId go as query params; body only needs title, text, rating
     final body = jsonEncode({
       'title': title,
       'text': text,
       'rating': rating,
-      'reviewer': {'id': reviewerId},
-      'pokemon': {'id': pokemonId},
     });
     final res = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}Review?reviewerId=$reviewerId&pokeId=$pokemonId'),
+      Uri.parse(
+          '${ApiConstants.baseUrl}Review?reviewerId=$reviewerId&pokeId=$pokemonId'),
       headers: {'Content-Type': 'application/json'},
       body: body,
     );
     if (res.statusCode != 200 && res.statusCode != 201) {
-      throw Exception('Failed to post review');
+      throw Exception('Failed to post review (status ${res.statusCode}): ${res.body}');
     }
   }
 
   static Future<void> delete(int reviewId) async {
-    final res = await http.delete(Uri.parse('${ApiConstants.baseUrl}Review/$reviewId'));
+    final res = await http
+        .delete(Uri.parse('${ApiConstants.baseUrl}Review/$reviewId'));
     if (res.statusCode != 200 && res.statusCode != 204) {
-      throw Exception('Failed to delete review');
+      throw Exception('Failed to delete review (status ${res.statusCode})');
     }
   }
 }

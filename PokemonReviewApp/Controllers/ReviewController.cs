@@ -2,6 +2,8 @@
 using PokemonReviewApp.Interface;
 using PokemonReviewApp.Models;
 using PokemonReviewApp.Repository;
+using PokemonReviewApp.Dto;
+using AutoMapper;
 
 namespace PokemonReviewApp.Controllers
 {
@@ -12,12 +14,14 @@ namespace PokemonReviewApp.Controllers
         private readonly IReviewRepository _reviewRepository;
         private readonly IPokemonRepository _pokemonRepository;
         private readonly IReviewerRepository _reviewerRepository;
+        private readonly IMapper _mapper;
 
-        public ReviewController(IReviewRepository reviewRepository,IPokemonRepository pokemonRepository,IReviewerRepository reviewerRepository)
+        public ReviewController(IReviewRepository reviewRepository,IPokemonRepository pokemonRepository,IReviewerRepository reviewerRepository,IMapper mapper)
         {
             _reviewRepository = reviewRepository;
             _pokemonRepository = pokemonRepository;
            _reviewerRepository = reviewerRepository;
+           _mapper = mapper;
         }
 
         [HttpGet]
@@ -64,7 +68,7 @@ namespace PokemonReviewApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateReview([FromQuery] int reviewerId, [FromQuery] int pokeId, [FromBody] Review reviewCreate)
+        public IActionResult CreateReview([FromQuery] int reviewerId, [FromQuery] int pokeId, [FromBody] ReviewDto reviewCreate)
         {
             if (reviewCreate == null)
                 return BadRequest(ModelState);
@@ -82,7 +86,7 @@ namespace PokemonReviewApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var reviewMap = (reviewCreate);
+            var reviewMap = _mapper.Map<Review>(reviewCreate);
 
             reviewMap.Pokemon = _pokemonRepository.GetPokemon(pokeId);
             reviewMap.Reviewer = _reviewerRepository.GetReviewer(reviewerId);
@@ -100,7 +104,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateReview(int reviewId, [FromBody] Review updatedReview)
+        public IActionResult UpdateReview(int reviewId, [FromBody] ReviewDto updatedReview)
         {
             if (updatedReview == null)
                 return BadRequest(ModelState);
@@ -114,9 +118,9 @@ namespace PokemonReviewApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            
+            var reviewMap = _mapper.Map<Review>(updatedReview);
 
-            if (!_reviewRepository.UpdateReview(updatedReview))
+            if (!_reviewRepository.UpdateReview(reviewMap))
             {
                 ModelState.AddModelError("", "Something went wrong updating review");
                 return StatusCode(500, ModelState);
