@@ -33,15 +33,19 @@ The backend requires setting up the database connection and running the API.
    ```bash
    cd PokemonReviewApp
    ```
-2. **Configure the Database Connection:**
+2. **Restore Dependencies:**
+   ```bash
+   dotnet restore
+   ```
+3. **Configure the Database Connection:**
    Open `appsettings.json` and update the `DefaultConnection` string so it matches your local SQL Server setup. It usually looks like this:
    `"Data Source=YOUR_SERVER_NAME;Initial Catalog=PokemonReview;Integrated Security=True;Encrypt=False;"`
-3. **Apply Database Migrations:**
+4. **Apply Database Migrations:**
    Apply migrations to create the database tables (this will also trigger the data seeder if configured).
    ```bash
    dotnet ef database update
    ```
-4. **Run the API:**
+5. **Run the API:**
    ```bash
    dotnet run
    ```
