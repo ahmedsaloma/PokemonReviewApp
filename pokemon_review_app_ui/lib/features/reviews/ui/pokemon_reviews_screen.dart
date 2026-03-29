@@ -5,6 +5,8 @@ import '../../reviews/models/review.dart';
 import '../../reviews/services/review_service.dart';
 import '../../../shared/widgets/review_card.dart';
 import '../../../shared/widgets/state_widgets.dart';
+import 'package:provider/provider.dart';
+import '../../auth/providers/auth_provider.dart';
 
 class PokemonReviewsScreen extends StatefulWidget {
   final int pokemonId;
@@ -36,8 +38,16 @@ class _PokemonReviewsScreenState extends State<PokemonReviewsScreen> {
   }
 
   Future<void> _delete(int reviewId) async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    if (!auth.isAuthenticated) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please log in first'), backgroundColor: Colors.orange));
+      context.push('/login');
+      return;
+    }
+    
     try {
-      await ReviewService.delete(reviewId);
+      await ReviewService.delete(reviewId, auth.token!);
       _load();
     } catch (e) {
       if (!mounted) return;

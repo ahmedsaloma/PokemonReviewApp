@@ -15,6 +15,8 @@ import '../../features/reviewers/ui/reviewers_screen.dart';
 import '../../features/reviewers/ui/reviewer_detail_screen.dart';
 import '../../features/countries/ui/countries_screen.dart';
 import '../../features/countries/ui/country_detail_screen.dart';
+import '../../features/auth/ui/login_screen.dart';
+import '../../features/auth/ui/register_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -24,6 +26,16 @@ class AppRouter {
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashScreen(),
+      ),
+
+      // --- Auth ---
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
       ),
 
       // --- Home ---

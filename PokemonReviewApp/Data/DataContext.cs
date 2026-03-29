@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PokemonReviewApp.Models;
 
 namespace PokemonReviewApp.Data
 {
-    public class DataContext :DbContext
+    public class DataContext : IdentityDbContext<AppUser>
     {
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -22,6 +23,13 @@ namespace PokemonReviewApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Reviewer>()
+                    .HasOne(r => r.AppUser)
+                    .WithOne(a => a.Reviewer)
+                    .HasForeignKey<Reviewer>(r => r.AppUserId);
+
             modelBuilder.Entity<PokemonCategory>()
                     .HasKey(pc => new { pc.PokemonId, pc.CategoryId });
             modelBuilder.Entity<PokemonCategory>()

@@ -1,4 +1,5 @@
-﻿using PokemonReviewApp.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using PokemonReviewApp.Data;
 using PokemonReviewApp.Models;
 
 namespace PokemonReviewApp
@@ -6,9 +7,13 @@ namespace PokemonReviewApp
     public class Seed
     {
         private readonly DataContext dataContext;
-        public Seed(DataContext context)
+        // The service provider lets us resolve UserManager during seeding
+        private readonly IServiceProvider _serviceProvider;
+
+        public Seed(DataContext context, IServiceProvider serviceProvider)
         {
             this.dataContext = context;
+            _serviceProvider = serviceProvider;
         }
         public void SeedDataContext()
         {
@@ -111,6 +116,32 @@ namespace PokemonReviewApp
                     }
                 };
                 dataContext.PokemonOwners.AddRange(pokemonOwners);
+                dataContext.SaveChanges();
+            }
+
+            // Create AppUser accounts for Reviewers who don't have one
+            var reviewersWithoutUsers = dataContext.Reviewers.Where(r => r.AppUserId == null).ToList();
+            if (reviewersWithoutUsers.Any())
+            {
+                var userManager = _serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                
+                // Using Wait() since SeedDataContext is synchronous
+                foreach (var reviewer in reviewersWithoutUsers)
+                {
+                    var email = $"{reviewer.FirstName.ToLower()}.{reviewer.LastName.ToLower()}@example.com";
+                    var user = new AppUser
+                    {
+                        Email = email,
+                        UserName = email,
+                        SecurityStamp = Guid.NewGuid().ToString()
+                    };
+
+                    var result = userManager.CreateAsync(user, "Password123!").Result;
+                    if (result.Succeeded)
+                    {
+                        reviewer.AppUserId = user.Id;
+                    }
+                }
                 dataContext.SaveChanges();
             }
         }

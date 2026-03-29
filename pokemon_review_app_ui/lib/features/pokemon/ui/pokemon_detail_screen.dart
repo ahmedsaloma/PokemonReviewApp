@@ -80,7 +80,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                 child: Image.network(
                   _spriteUrl,
                   height: 200,
-                  errorBuilder: (_, _a, _b) =>
+                  errorBuilder: (_, a, b) =>
                       const Icon(Icons.catching_pokemon, size: 100, color: AppColors.primary),
                 ),
               ),

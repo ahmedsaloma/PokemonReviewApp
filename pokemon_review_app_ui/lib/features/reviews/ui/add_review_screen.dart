@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../reviews/services/review_service.dart';
-import '../../reviewers/models/reviewer.dart';
-import '../../reviewers/services/reviewer_service.dart';
-import '../../../shared/widgets/state_widgets.dart';
+import 'package:provider/provider.dart';
+import '../../auth/providers/auth_provider.dart';
 
 class AddReviewScreen extends StatefulWidget {
   final int pokemonId;
@@ -19,16 +18,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   final _titleCtrl = TextEditingController();
   final _textCtrl = TextEditingController();
   int _rating = 5;
-  int? _selectedReviewerId;
-  List<Reviewer> _reviewers = [];
   bool _saving = false;
-  bool _loadingReviewers = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadReviewers();
-  }
 
   @override
   void dispose() {
@@ -37,30 +27,23 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     super.dispose();
   }
 
-  Future<void> _loadReviewers() async {
-    try {
-      final data = await ReviewerService.fetchAll();
-      setState(() { _reviewers = data; _loadingReviewers = false; });
-    } catch (e) {
-      setState(() => _loadingReviewers = false);
-    }
-  }
-
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_selectedReviewerId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a reviewer'), backgroundColor: Colors.orange));
+    
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    if (!auth.isAuthenticated) {
+      context.push('/login');
       return;
     }
+
     setState(() => _saving = true);
     try {
       await ReviewService.create(
         title: _titleCtrl.text.trim(),
         text: _textCtrl.text.trim(),
         rating: _rating,
-        reviewerId: _selectedReviewerId!,
         pokemonId: widget.pokemonId,
+        token: auth.token!,
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,30 +65,13 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       appBar: AppBar(
         title: const Text('Add a Review'),
       ),
-      body: _loadingReviewers
-          ? const LoadingIndicator()
-          : SingleChildScrollView(
+      body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Reviewer',
-                        style: TextStyle(
-                            color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 15)),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<int>(
-                      value: _selectedReviewerId,
-                      dropdownColor: AppColors.card,
-                      style: const TextStyle(color: AppColors.textPrimary),
-                      decoration: const InputDecoration(hintText: 'Select reviewer'),
-                      items: _reviewers
-                          .map((r) => DropdownMenuItem(value: r.id, child: Text(r.fullName)))
-                          .toList(),
-                      onChanged: (v) => setState(() => _selectedReviewerId = v),
-                    ),
-                    const SizedBox(height: 20),
                     const Text('Title',
                         style: TextStyle(
                             color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 15)),

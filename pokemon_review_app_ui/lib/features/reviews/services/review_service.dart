@@ -31,10 +31,10 @@ class ReviewService {
     required String title,
     required String text,
     required int rating,
-    required int reviewerId,
     required int pokemonId,
+    required String token,
   }) async {
-    // reviewerId & pokeId go as query params; body only needs title, text, rating
+    // pokeId goes as query param; body only needs title, text, rating. reviewerId is determined from token in backend.
     final body = jsonEncode({
       'title': title,
       'text': text,
@@ -42,8 +42,11 @@ class ReviewService {
     });
     final res = await http.post(
       Uri.parse(
-          '${ApiConstants.baseUrl}Review?reviewerId=$reviewerId&pokeId=$pokemonId'),
-      headers: {'Content-Type': 'application/json'},
+          '${ApiConstants.baseUrl}Review?pokeId=$pokemonId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
       body: body,
     );
     if (res.statusCode != 200 && res.statusCode != 201) {
@@ -51,9 +54,12 @@ class ReviewService {
     }
   }
 
-  static Future<void> delete(int reviewId) async {
+  static Future<void> delete(int reviewId, String token) async {
     final res = await http
-        .delete(Uri.parse('${ApiConstants.baseUrl}Review/$reviewId'));
+        .delete(Uri.parse('${ApiConstants.baseUrl}Review/$reviewId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        });
     if (res.statusCode != 200 && res.statusCode != 204) {
       throw Exception('Failed to delete review (status ${res.statusCode})');
     }

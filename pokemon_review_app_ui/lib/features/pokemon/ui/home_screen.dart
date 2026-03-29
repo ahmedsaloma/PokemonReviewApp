@@ -8,6 +8,8 @@ import '../../../features/categories/services/category_service.dart';
 import '../../../shared/widgets/pokemon_card.dart';
 import '../../../shared/widgets/state_widgets.dart';
 import '../../../shared/widgets/app_scaffold.dart';
+import 'package:provider/provider.dart';
+import '../../auth/providers/auth_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -117,6 +119,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          GestureDetector(
+            onTap: () async {
+              await Provider.of<AuthProvider>(context, listen: false).logout();
+              if (mounted) context.go('/login');
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+              ),
+              child: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+            ),
+          ),
+          const SizedBox(width: 8),
           GestureDetector(
             onTap: () => context.push('/search'),
             child: Container(

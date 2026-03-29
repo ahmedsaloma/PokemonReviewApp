@@ -6,6 +6,7 @@ namespace PokemonReviewApp.Interface
     {
         ICollection<Reviewer> GetReviewers();
         Reviewer GetReviewer(int reviewerId);
+        Reviewer GetReviewerByAppUserId(string appUserId);
         ICollection<Review> GetReviewsByReviewer(int reviewerId);
         bool UpdateReviewer(Reviewer reviewer);
         bool DeleteReviewer(Reviewer reviewer);

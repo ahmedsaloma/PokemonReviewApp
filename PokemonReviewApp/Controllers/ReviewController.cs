@@ -4,6 +4,8 @@ using PokemonReviewApp.Models;
 using PokemonReviewApp.Repository;
 using PokemonReviewApp.Dto;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace PokemonReviewApp.Controllers
 {
@@ -66,9 +68,11 @@ namespace PokemonReviewApp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateReview([FromQuery] int reviewerId, [FromQuery] int pokeId, [FromBody] ReviewDto reviewCreate)
+        [ProducesResponseType(401)]
+        public IActionResult CreateReview([FromQuery] int pokeId, [FromBody] ReviewDto reviewCreate)
         {
             if (reviewCreate == null)
                 return BadRequest(ModelState);
@@ -86,10 +90,19 @@ namespace PokemonReviewApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var reviewer = _reviewerRepository.GetReviewerByAppUserId(appUserId);
+
+            if (reviewer == null)
+            {
+                ModelState.AddModelError("", "Reviewer profile not found for the current user");
+                return StatusCode(403, ModelState);
+            }
+
             var reviewMap = _mapper.Map<Review>(reviewCreate);
 
             reviewMap.Pokemon = _pokemonRepository.GetPokemon(pokeId);
-            reviewMap.Reviewer = _reviewerRepository.GetReviewer(reviewerId);
+            reviewMap.Reviewer = reviewer;
 
 
             if (!_reviewRepository.CreateReview(reviewMap))
@@ -101,9 +114,11 @@ namespace PokemonReviewApp.Controllers
             return Ok("Successfully created");
         }
         [HttpPut("{reviewId}")]
+        [Authorize]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
         public IActionResult UpdateReview(int reviewId, [FromBody] ReviewDto updatedReview)
         {
             if (updatedReview == null)
@@ -130,9 +145,12 @@ namespace PokemonReviewApp.Controllers
         }
 
         [HttpDelete("{reviewId}")]
+        [Authorize]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public IActionResult DeleteReview(int reviewId)
         {
             if (!_reviewRepository.ReviewExists(reviewId))
@@ -141,6 +159,15 @@ namespace PokemonReviewApp.Controllers
             }
 
             var reviewToDelete = _reviewRepository.GetReview(reviewId);
+
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var reviewer = _reviewerRepository.GetReviewerByAppUserId(appUserId);
+
+            if (reviewer == null || reviewToDelete.Reviewer?.Id != reviewer.Id)
+            {
+                // Can only delete own reviews
+                return Forbid();
+            }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
