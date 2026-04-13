@@ -29,6 +29,7 @@ PublishScripts/
 *.pubxml.user
 
 ## Secrets & config overrides
+appsettings.json
 appsettings.Development.json
 appsettings.Local.json
 secrets.json
