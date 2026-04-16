@@ -4,7 +4,7 @@ namespace PokemonReviewApp.Interface
 {
     public interface IReviewerRepository
     {
-        ICollection<Reviewer> GetReviewers();
+        ICollection<Reviewer> GetReviewers(string? searchTerm = null);
         Reviewer GetReviewer(int reviewerId);
         Reviewer GetReviewerByAppUserId(string appUserId);
         ICollection<Review> GetReviewsByReviewer(int reviewerId);

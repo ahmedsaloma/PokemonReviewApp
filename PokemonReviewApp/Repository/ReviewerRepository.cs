@@ -30,9 +30,20 @@ namespace PokemonReviewApp.Repository
             return _dataContext.Reviewers.Where(r => r.AppUserId == appUserId).FirstOrDefault();
         }
 
-        public ICollection<Reviewer> GetReviewers()
+        public ICollection<Reviewer> GetReviewers(string? searchTerm = null)
         {
-            return _dataContext.Reviewers.ToList();
+            var query = _dataContext.Reviewers.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.Trim();
+                query = query.Where(r =>
+                    r.FirstName.Contains(term) ||
+                    r.LastName.Contains(term) ||
+                    (r.FirstName + " " + r.LastName).Contains(term));
+            }
+
+            return query.OrderBy(r => r.Id).ToList();
         }
 
         public ICollection<Review> GetReviewsByReviewer(int reviewerId)

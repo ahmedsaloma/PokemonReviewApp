@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
@@ -15,11 +16,11 @@ class PokemonListScreen extends StatefulWidget {
 }
 
 class _PokemonListScreenState extends State<PokemonListScreen> {
-  List<Pokemon> _all = [];
-  List<Pokemon> _filtered = [];
+  List<Pokemon> _pokemons = [];
   bool _loading = true;
   String? _error;
   final _search = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -29,25 +30,26 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _search.dispose();
     super.dispose();
   }
 
-  Future<void> _load() async {
+  Future<void> _load({String? searchTerm}) async {
     setState(() { _loading = true; _error = null; });
     try {
-      final data = await PokemonService.fetchAll();
-      setState(() { _all = data; _filtered = data; _loading = false; });
+      final data = await PokemonService.fetchAll(searchTerm: searchTerm);
+      setState(() { _pokemons = data; _loading = false; });
     } catch (e) {
       setState(() { _error = e.toString(); _loading = false; });
     }
   }
 
   void _onSearch(String query) {
-    setState(() {
-      _filtered = _all
-          .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      _load(searchTerm: query);
     });
   }
 
@@ -78,14 +80,14 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
                                   icon: const Icon(Icons.clear, color: AppColors.textMuted),
                                   onPressed: () {
                                     _search.clear();
-                                    _onSearch('');
+                                    _load();
                                   })
                               : null,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: _filtered.isEmpty
+                        child: _pokemons.isEmpty
                           ? const EmptyState(
                               title: 'No Pokémon found',
                               subtitle: 'Try a different name',
@@ -101,10 +103,10 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
                                   crossAxisSpacing: 12,
                                   childAspectRatio: 0.75,
                                 ),
-                                itemCount: _filtered.length,
+                                itemCount: _pokemons.length,
                                 itemBuilder: (_, i) => PokemonCard(
-                                  pokemon: _filtered[i],
-                                  onTap: () => context.push('/pokemon/${_filtered[i].id}'),
+                                  pokemon: _pokemons[i],
+                                  onTap: () => context.push('/pokemon/${_pokemons[i].id}'),
                                 ),
                               ),
                             ),

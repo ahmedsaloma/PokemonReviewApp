@@ -21,9 +21,9 @@ namespace PokemonReviewApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
-        public IActionResult GetOwners()
+        public IActionResult GetOwners([FromQuery] string? searchTerm)
         {
-            var owners = (_ownerRepository.GetOwners());
+            var owners = (_ownerRepository.GetOwners(searchTerm));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

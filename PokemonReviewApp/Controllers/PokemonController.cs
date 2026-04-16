@@ -25,9 +25,9 @@ namespace PokemonReviewApp.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
 
-        public IActionResult GetPokemons()
+        public IActionResult GetPokemons([FromQuery] string? searchTerm)
         {
-            var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
+            var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons(searchTerm));
             if (!ModelState.IsValid)
             {
                 return BadRequest();

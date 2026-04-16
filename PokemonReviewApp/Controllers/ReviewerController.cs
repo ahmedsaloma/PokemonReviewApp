@@ -17,9 +17,9 @@ namespace PokemonReviewApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Reviewer>))]
-        public IActionResult GetReviewers()
+        public IActionResult GetReviewers([FromQuery] string? searchTerm)
         {
-            var reviewers =(_reviewerRepository.GetReviewers());
+            var reviewers =(_reviewerRepository.GetReviewers(searchTerm));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

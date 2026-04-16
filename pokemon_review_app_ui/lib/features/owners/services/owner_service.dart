@@ -5,8 +5,14 @@ import '../models/owner.dart';
 import '../../pokemon/models/pokemon.dart';
 
 class OwnerService {
-  static Future<List<Owner>> fetchAll() async {
-    final res = await http.get(Uri.parse('${ApiConstants.baseUrl}Owner'));
+  static Future<List<Owner>> fetchAll({String? searchTerm}) async {
+    final uri = Uri.parse('${ApiConstants.baseUrl}Owner').replace(
+      queryParameters: searchTerm != null && searchTerm.trim().isNotEmpty
+          ? {'searchTerm': searchTerm.trim()}
+          : null,
+    );
+
+    final res = await http.get(uri);
     if (res.statusCode == 200) {
       return (jsonDecode(res.body) as List).map((e) => Owner.fromJson(e)).toList();
     }

@@ -68,10 +68,18 @@ namespace PokemonReviewApp.Repository
             return ((decimal)review.Sum(p => p.Rating)) / review.Count();
         }
 
-        public ICollection<Pokemon> GetPokemons()
-        {
-          return  _dataContext.Pokemon.OrderBy(P => P.Id).ToList();
-        }
+                public ICollection<Pokemon> GetPokemons(string? searchTerm = null)
+                {
+                        var query = _dataContext.Pokemon.AsQueryable();
+
+                        if (!string.IsNullOrWhiteSpace(searchTerm))
+                        {
+                                var term = searchTerm.Trim();
+                                query = query.Where(p => p.Name.Contains(term));
+                        }
+
+                        return query.OrderBy(p => p.Id).ToList();
+                }
 
         public bool PokemonExists(int pokeId)
         {

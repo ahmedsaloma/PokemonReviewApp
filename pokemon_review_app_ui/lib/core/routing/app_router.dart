@@ -15,6 +15,7 @@ import '../../features/reviewers/ui/reviewers_screen.dart';
 import '../../features/reviewers/ui/reviewer_detail_screen.dart';
 import '../../features/countries/ui/countries_screen.dart';
 import '../../features/countries/ui/country_detail_screen.dart';
+import '../../features/search/ui/global_search_screen.dart';
 import '../../features/auth/ui/login_screen.dart';
 import '../../features/auth/ui/register_screen.dart';
 
@@ -42,6 +43,10 @@ class AppRouter {
       GoRoute(
         path: '/home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/search',
+        builder: (context, state) => const GlobalSearchScreen(),
       ),
 
       // --- Pokémon ---

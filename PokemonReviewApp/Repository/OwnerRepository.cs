@@ -37,9 +37,21 @@ namespace PokemonReviewApp.Repository
             return owners.ToList();
         }
 
-        public ICollection<Owner> GetOwners()
+        public ICollection<Owner> GetOwners(string? searchTerm = null)
         {
-            return _dataContext.Owners.ToList();
+            var query = _dataContext.Owners.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.Trim();
+                query = query.Where(o =>
+                    o.FirstName.Contains(term) ||
+                    o.LastName.Contains(term) ||
+                    o.Gym.Contains(term) ||
+                    (o.FirstName + " " + o.LastName).Contains(term));
+            }
+
+            return query.OrderBy(o => o.Id).ToList();
         }
 
         public ICollection<Pokemon> GetPokemonByOwner(int ownerId)
