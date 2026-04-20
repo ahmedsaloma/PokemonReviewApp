@@ -60,59 +60,62 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
         backgroundColor: AppColors.background,
         title: const Text('All Pokémon'),
       ),
-      child: _loading
-          ? const LoadingIndicator()
-          : _error != null
-              ? ErrorDisplay(message: _error!, onRetry: _load)
-              : Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                      child: TextField(
-                        controller: _search,
-                        onChanged: _onSearch,
-                        style: const TextStyle(color: AppColors.textPrimary),
-                        decoration: InputDecoration(
-                          hintText: 'Search Pokémon...',
-                          prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
-                          suffixIcon: _search.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.clear, color: AppColors.textMuted),
-                                  onPressed: () {
-                                    _search.clear();
-                                    _load();
-                                  })
-                              : null,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                        child: _pokemons.isEmpty
-                          ? const EmptyState(
-                              title: 'No Pokémon found',
-                              subtitle: 'Try a different name',
-                              icon: Icons.catching_pokemon)
-                          : RefreshIndicator(
-                              onRefresh: _load,
-                              color: AppColors.primary,
-                              child: GridView.builder(
-                                padding: const EdgeInsets.all(16),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 12,
-                                  crossAxisSpacing: 12,
-                                  childAspectRatio: 0.75,
-                                ),
-                                itemCount: _pokemons.length,
-                                itemBuilder: (_, i) => PokemonCard(
-                                  pokemon: _pokemons[i],
-                                  onTap: () => context.push('/pokemon/${_pokemons[i].id}'),
-                                ),
+      child: Column(
+        children: [
+          // 🔍 Search Bar (Stay here always to keep focus)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: TextField(
+              controller: _search,
+              onChanged: _onSearch,
+              style: const TextStyle(color: AppColors.textPrimary),
+              decoration: InputDecoration(
+                hintText: 'Search Pokémon...',
+                prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
+                suffixIcon: _search.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, color: AppColors.textMuted),
+                        onPressed: () {
+                          _search.clear();
+                          _load();
+                        })
+                    : null,
+              ),
+            ),
+          ),
+          
+          // 📋 Results, Loading, or Error
+          Expanded(
+            child: _loading
+                ? const LoadingIndicator()
+                : _error != null
+                    ? ErrorDisplay(message: _error!, onRetry: _load)
+                    : _pokemons.isEmpty
+                        ? const EmptyState(
+                            title: 'No Pokémon found',
+                            subtitle: 'Try a different name',
+                            icon: Icons.catching_pokemon)
+                        : RefreshIndicator(
+                            onRefresh: _load,
+                            color: AppColors.primary,
+                            child: GridView.builder(
+                              padding: const EdgeInsets.all(16),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 0.75,
+                              ),
+                              itemCount: _pokemons.length,
+                              itemBuilder: (_, i) => PokemonCard(
+                                pokemon: _pokemons[i],
+                                onTap: () => context.push('/pokemon/${_pokemons[i].id}'),
                               ),
                             ),
-                    ),
-                  ],
-                ),
+                          ),
+          ),
+        ],
+      ),
     );
   }
 }

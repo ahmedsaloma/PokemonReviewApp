@@ -6,6 +6,9 @@
 bin/
 obj/
 out/
+**/bin/
+**/obj/
+**/publish/
 
 ## Visual Studio files
 .vs/
@@ -35,6 +38,11 @@ appsettings.Local.json
 secrets.json
 *.pfx
 *.p12
+
+## SQL Server files
+*.mdf
+*.ldf
+*.ndf
 
 ## Rider / JetBrains
 .idea/
@@ -123,3 +131,15 @@ logs/
 .env
 .env.*
 !.env.example
+
+## Executables & Other operational files
+*.exe
+*.dll
+*.pdb
+*.msi
+*.msm
+*.msp
+*.exp
+*.lib
+*.temp
+*.tmp

@@ -41,15 +41,20 @@ The backend requires setting up the database connection and running the API.
    Open `appsettings.json` and update the `DefaultConnection` string so it matches your local SQL Server setup. It usually looks like this:
    `"Data Source=YOUR_SERVER_NAME;Initial Catalog=PokemonReview;Integrated Security=True;Encrypt=False;"`
 4. **Apply Database Migrations:**
-   Apply migrations to create the database tables (this will also trigger the data seeder if configured).
+   Apply migrations to create the database tables.
    ```bash
    dotnet ef database update
    ```
-5. **Run the API:**
+5. **Seed Initial Data:**
+   Populate the database with initial Pokemon, reviewers, and categories.
+   ```bash
+   dotnet run seeddata
+   ```
+6. **Run the API:**
    ```bash
    dotnet run
    ```
-   The API will start up. You can browse to `http://localhost:5000/swagger` to view the Swagger API documentation and verify it's working.
+   The API will start up. You can browse to `http://localhost:5219/swagger` to view the Swagger API documentation and verify it's working.
 
 ---
 
@@ -67,8 +72,8 @@ The frontend requires installing Flutter packages and pointing the app to the lo
    ```
 3. **Configure the API Base URL:**
    Open `lib/core/constants/api_constants.dart` in the Flutter project. Make sure the endpoint matches where your backend is running.
-   - If using an **Android Emulator**, use: `http://10.0.2.2:5000`
-   - If using an **iOS Simulator** or Web, use: `http://localhost:5000`
+   - If using an **Android Emulator**, use: `http://10.0.2.2:5219`
+   - If using an **iOS Simulator** or Web, use: `http://localhost:5219`
 4. **Run the App:**
    Start an emulator (or connect a physical device) and run:
    ```bash
