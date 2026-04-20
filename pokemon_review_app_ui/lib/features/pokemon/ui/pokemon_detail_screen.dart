@@ -43,7 +43,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
   }
 
   String get _spriteUrl =>
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${widget.pokemonId}.png';
+      _pokemon?.imageUrl ?? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${widget.pokemonId}.png';
 
   @override
   Widget build(BuildContext context) {

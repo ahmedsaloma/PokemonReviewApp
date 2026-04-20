@@ -21,8 +21,9 @@ class AppScaffold extends StatelessWidget {
     final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/pokemon')) return 1;
     if (location.startsWith('/categories')) return 2;
-    if (location.startsWith('/owners')) return 3;
-    if (location.startsWith('/reviewers')) return 4;
+    if (location.startsWith('/countries')) return 3;
+    if (location.startsWith('/owners')) return 4;
+    if (location.startsWith('/reviewers')) return 5;
     return 0; // '/home' and fallback
   }
 
@@ -38,9 +39,12 @@ class AppScaffold extends StatelessWidget {
         context.go('/categories');
         break;
       case 3:
-        context.go('/owners');
+        context.go('/countries');
         break;
       case 4:
+        context.go('/owners');
+        break;
+      case 5:
         context.go('/reviewers');
         break;
     }
@@ -55,6 +59,7 @@ class AppScaffold extends StatelessWidget {
       appBar: appBar,
       body: child,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         onTap: (i) => _onTap(context, i),
         items: const [
@@ -72,6 +77,11 @@ class AppScaffold extends StatelessWidget {
             icon: Icon(Icons.category_outlined),
             activeIcon: Icon(Icons.category_rounded),
             label: 'Types',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.public_outlined),
+            activeIcon: Icon(Icons.public_rounded),
+            label: 'Regions',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline_rounded),

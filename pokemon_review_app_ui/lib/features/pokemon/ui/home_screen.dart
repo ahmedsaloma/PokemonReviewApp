@@ -5,6 +5,8 @@ import '../../../features/pokemon/models/pokemon.dart';
 import '../../../features/categories/models/category.dart';
 import '../../../features/pokemon/services/pokemon_service.dart';
 import '../../../features/categories/services/category_service.dart';
+import '../../../features/countries/models/country.dart';
+import '../../../features/countries/services/country_service.dart';
 import '../../../shared/widgets/pokemon_card.dart';
 import '../../../shared/widgets/state_widgets.dart';
 import '../../../shared/widgets/app_scaffold.dart';
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Pokemon> _pokemon = [];
   List<Category> _categories = [];
+  List<Country> _countries = [];
   bool _loading = true;
   String? _error;
 
@@ -36,10 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
       final results = await Future.wait([
         PokemonService.fetchAll(),
         CategoryService.fetchAll(),
+        CountryService.fetchAll(),
       ]);
       setState(() {
         _pokemon = results[0] as List<Pokemon>;
         _categories = results[1] as List<Category>;
+        _countries = results[2] as List<Country>;
         _loading = false;
       });
     } catch (e) {
@@ -72,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         slivers: [
           SliverToBoxAdapter(child: _buildHeader()),
           if (_categories.isNotEmpty) SliverToBoxAdapter(child: _buildCategories()),
+          if (_countries.isNotEmpty) SliverToBoxAdapter(child: _buildCountries()),
           SliverToBoxAdapter(child: _buildSectionTitle('Featured Pokémon', '/pokemon')),
           SliverToBoxAdapter(child: _buildFeaturedCarousel(featured)),
           SliverToBoxAdapter(child: _buildSectionTitle('All Pokémon', '/pokemon')),
@@ -193,6 +199,68 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Text(cat.name,
                       style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 13)),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCountries() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Regions',
+                  style: TextStyle(
+                      color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              GestureDetector(
+                onTap: () => context.push('/countries'),
+                child: const Text('See all',
+                    style: TextStyle(color: AppColors.primary, fontSize: 13)),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 60,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: _countries.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 8),
+            itemBuilder: (_, i) {
+              final country = _countries[i];
+              return GestureDetector(
+                onTap: () => context.push('/countries/${country.id}'),
+                child: Container(
+                  width: 130,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.location_on_rounded, color: AppColors.primary, size: 18),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          country.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

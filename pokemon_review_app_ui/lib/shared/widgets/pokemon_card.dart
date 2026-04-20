@@ -10,7 +10,7 @@ class PokemonCard extends StatelessWidget {
   const PokemonCard({super.key, required this.pokemon, this.onTap, this.rating});
 
   String get _avatarUrl =>
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png';
+      pokemon.imageUrl ?? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png';
 
   @override
   Widget build(BuildContext context) {
