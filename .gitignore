@@ -1,11 +1,9 @@
 # ============================================================
 # .NET / ASP.NET Core
 # ============================================================
-
-## Build outputs
-bin/
-obj/
-out/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
 **/bin/
 **/obj/
 **/publish/
@@ -39,14 +37,15 @@ secrets.json
 *.pfx
 *.p12
 
-## SQL Server files
+## SQL Server & SQLite files
 *.mdf
 *.ldf
 *.ndf
-
-## Rider / JetBrains
-.idea/
-*.sln.iml
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
 
 ## Test results
 TestResults/
@@ -57,7 +56,6 @@ coverage/
 # ============================================================
 # Flutter / Dart
 # ============================================================
-
 ## Dart tool cache
 .dart_tool/
 .packages
@@ -88,6 +86,12 @@ android/captures/
 android/key.properties
 *.keystore
 *.jks
+
+## Binaries
+*.apk
+*.aab
+*.ipa
+*.app
 
 ## Web
 web/
@@ -122,6 +126,7 @@ $RECYCLE.BIN/
 ## JetBrains
 .idea/
 *.iml
+*.sln.iml
 
 ## Logs
 *.log
