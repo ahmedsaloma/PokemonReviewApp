@@ -4,7 +4,6 @@ import '../../../core/constants/app_colors.dart';
 import '../models/country.dart';
 import '../services/country_service.dart';
 import '../../../shared/widgets/state_widgets.dart';
-import '../../../shared/widgets/app_scaffold.dart';
 
 class CountriesScreen extends StatefulWidget {
   const CountriesScreen({super.key});
@@ -36,12 +35,12 @@ class _CountriesScreenState extends State<CountriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Regions'),
+        title: const Text('Countries'),
       ),
-      child: _loading
+      body: _loading
           ? const LoadingIndicator()
           : _error != null
               ? ErrorDisplay(message: _error!, onRetry: _load)

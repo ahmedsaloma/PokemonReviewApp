@@ -13,7 +13,7 @@ class ApiConstants {
 
     // Android emulator maps host machine localhost to 10.0.2.2.
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://127.0.0.1:5219/api/';
+      return 'http://10.0.2.2:5219/api/';
     }
 
     // Windows/iOS/macOS/Linux/Web running on the same machine.

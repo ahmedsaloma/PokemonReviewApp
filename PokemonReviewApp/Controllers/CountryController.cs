@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonReviewApp.Interface;
 using PokemonReviewApp.Models;
 
@@ -41,19 +41,6 @@ namespace PokemonReviewApp.Controllers
                 return BadRequest(ModelState);
 
             return Ok(country);
-        }
-
-        [HttpGet("{countryId}/owners")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetOwnersFromACountry(int countryId)
-        {
-            var owners = _countryRepository.GetOwnersFromACountry(countryId);
-
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            return Ok(owners);
         }
 
         [HttpGet("/owners/{ownerId}")]

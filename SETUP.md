@@ -41,20 +41,15 @@ The backend requires setting up the database connection and running the API.
    Open `appsettings.json` and update the `DefaultConnection` string so it matches your local SQL Server setup. It usually looks like this:
    `"Data Source=YOUR_SERVER_NAME;Initial Catalog=PokemonReview;Integrated Security=True;Encrypt=False;"`
 4. **Apply Database Migrations:**
-   Apply migrations to create the database tables.
+   Apply migrations to create the database tables (this will also trigger the data seeder if configured).
    ```bash
    dotnet ef database update
    ```
-5. **Seed Initial Data:**
-   Populate the database with initial Pokemon, reviewers, and categories.
-   ```bash
-   dotnet run seeddata
-   ```
-6. **Run the API:**
+5. **Run the API:**
    ```bash
    dotnet run
    ```
-   The API will start up. You can browse to `http://localhost:5219/swagger` to view the Swagger API documentation and verify it's working.
+   The API will start up. You can browse to `http://localhost:5000/swagger` to view the Swagger API documentation and verify it's working.
 
 ---
 
@@ -71,18 +66,11 @@ The frontend requires installing Flutter packages and pointing the app to the lo
    flutter pub get
    ```
 3. **Configure the API Base URL:**
-   Open `lib/core/constants/api_constants.dart` in the Flutter project. By default, the app is set strictly to `http://127.0.0.1:5219/api/` which ensures it uniformly connects via localhost port-forwarding across any environment.
-
-4. **Running on a Physical Android Device (Crucial Step):**
-   When running the app on a real Android phone, the phone cannot natively see your PC's `localhost`. 
-   To bridge the connection instantly, **double-click the `link_phone.bat` script** located in the root directory.
-   *(This script runs `adb reverse tcp:5219 tcp:5219` to map the phone's loopback to the PC's loopback).*
-
-   > ⚠️ **IMPORTANT NOTE FOR TEAMMATES:** 
-   > The `link_phone.bat` file hardcodes the `adb.exe` path to a specific drive (e.g., `D:\Android\sdk\...`). If your Android SDK is installed somewhere else (like `C:\Users\Username\AppData\Local\Android\Sdk`), you **MUST** right-click `link_phone.bat`, select Edit, and change the path to point to your exact `adb.exe` location. If ADB is already in your System Environment Variables, you can change the script to simply say: `adb reverse tcp:5219 tcp:5219`.
-
-5. **Run the App:**
-   Ensure the backend is running, the phone is connected, and then run:
+   Open `lib/core/constants/api_constants.dart` in the Flutter project. Make sure the endpoint matches where your backend is running.
+   - If using an **Android Emulator**, use: `http://10.0.2.2:5000`
+   - If using an **iOS Simulator** or Web, use: `http://localhost:5000`
+4. **Run the App:**
+   Start an emulator (or connect a physical device) and run:
    ```bash
    flutter run
    ```
