@@ -49,6 +49,16 @@ class _CountryDetailScreenState extends State<CountryDetailScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(_country?.name ?? 'Country'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/countries');
+            }
+          },
+        ),
       ),
       body: _loading
           ? const LoadingIndicator()
